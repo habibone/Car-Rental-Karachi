@@ -1,14 +1,14 @@
 import React from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ProblemSection from './components/ProblemSection';
-import SolutionSection from './components/SolutionSection';
-import ProcessSection from './components/ProcessSection';
-import LeadForm from './components/LeadForm';
-import SocialProof from './components/SocialProof';
-import PricingSection from './components/PricingSection';
-import Footer from './components/Footer';
-import StickyCTA from './components/StickyCTA';
+import Navbar from './components/Navbar.tsx';
+import Hero from './components/Hero.tsx';
+import ProblemSection from './components/ProblemSection.tsx';
+import SolutionSection from './components/SolutionSection.tsx';
+import ProcessSection from './components/ProcessSection.tsx';
+import LeadForm from './components/LeadForm.tsx';
+import SocialProof from './components/SocialProof.tsx';
+import PricingSection from './components/PricingSection.tsx';
+import Footer from './components/Footer.tsx';
+import StickyCTA from './components/StickyCTA.tsx';
 
 function App() {
   return (

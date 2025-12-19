@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Send, CheckCircle } from 'lucide-react';
-import { LeadFormData } from '../types';
+import { LeadFormData } from '../types.ts';
 
 const LeadForm: React.FC = () => {
   const [formData, setFormData] = useState<LeadFormData>({
