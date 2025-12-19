@@ -3,20 +3,37 @@ import { Send, CheckCircle, Loader2, MessageCircle } from 'lucide-react';
 import { LeadFormData } from '../types.ts';
 
 /**
- * GOOGLE SHEETS SETUP INSTRUCTIONS:
- * 1. Create a Google Sheet.
- * 2. Extensions -> Apps Script.
- * 3. Paste this code:
+ * GOOGLE SHEETS INTEGRATION (DATA DESTINATION):
+ * Target Sheet: https://docs.google.com/spreadsheets/d/1kx1ecug5mGiGU8B_hsjQuOXTvUmty3cLNLGLE9Vhu9E/edit
+ * 
+ * SETUP INSTRUCTIONS:
+ * 1. Open the Google Sheet link above (or your own copy).
+ * 2. Go to "Extensions" -> "Apps Script".
+ * 3. Delete any existing code and paste this:
+ * 
  *    function doPost(e) {
  *      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
  *      var data = JSON.parse(e.postData.contents);
- *      sheet.appendRow([new Date(), data.businessName, data.ownerName, data.city, data.phone, data.whatsapp]);
+ *      sheet.appendRow([
+ *        new Date(), 
+ *        data.businessName, 
+ *        data.ownerName, 
+ *        data.city, 
+ *        data.phone, 
+ *        data.whatsapp
+ *      ]);
  *      return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
  *    }
- * 4. Deploy -> New Deployment -> Web App -> Access: Anyone.
- * 5. Paste the URL into GOOGLE_SHEET_URL below.
+ * 
+ * 4. Click "Deploy" -> "New Deployment".
+ * 5. Select "Web App".
+ * 6. Execute as: "Me" | Who has access: "Anyone".
+ * 7. Copy the "Web App URL" (it starts with https://script.google.com/...)
+ * 8. Paste that URL into the GOOGLE_SHEET_URL constant below.
  */
-const GOOGLE_SHEET_URL = ''; // Replace with your Web App URL
+
+// IMPORTANT: Replace this placeholder with your actual Apps Script Deployment URL
+const GOOGLE_SHEET_URL = 'PASTE_YOUR_APPS_SCRIPT_DEPLOYMENT_URL_HERE'; 
 const WHATSAPP_BUSINESS_NUMBER = "923001234567";
 
 const LeadForm: React.FC = () => {
@@ -39,7 +56,10 @@ const LeadForm: React.FC = () => {
     setIsLoading(true);
 
     try {
-      if (GOOGLE_SHEET_URL) {
+      const isUrlConfigured = GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes('PASTE_YOUR');
+
+      if (isUrlConfigured) {
+        // We use mode: 'no-cors' for Google Apps Script redirects
         await fetch(GOOGLE_SHEET_URL, {
           method: 'POST',
           mode: 'no-cors',
@@ -47,14 +67,16 @@ const LeadForm: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...formData, timestamp: new Date().toISOString() }),
         });
+        console.log("Data successfully sent to Google Sheet script");
       } else {
-        console.warn("Google Sheet URL not configured.");
+        console.warn("GOOGLE_SHEET_URL is not set. Data not sent. Setup the Apps Script as per instructions.");
+        // Simulate a delay for UX demonstration
         await new Promise(resolve => setTimeout(resolve, 1500));
       }
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
-      alert("Submission error. Please contact us on WhatsApp.");
+      alert("ہم معذرت خواہ ہیں، ڈیٹا محفوظ نہیں ہو سکا۔ براہ کرم واٹس ایپ پر رابطہ کریں۔");
     } finally {
       setIsLoading(false);
     }
@@ -73,8 +95,8 @@ const LeadForm: React.FC = () => {
                 <div className="flex justify-center mb-6">
                     <CheckCircle className="w-20 h-20 text-green-500" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4 font-urdu leading-[2.2]" dir="rtl">شکریہ! آپ کی درخواست موصول ہو گئی ہے۔</h3>
-                <p className="text-gray-600 mb-8 font-urdu leading-[2.2]" dir="rtl">اپنی بکنگ کی فوری تصدیق اور فری ڈیمو حاصل کرنے کے لیے ابھی ہمیں WhatsApp کریں۔</p>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4 font-urdu leading-[2.2]" dir="rtl">شکریہ! آپ کی تفصیلات محفوظ کر لی گئی ہیں۔</h3>
+                <p className="text-gray-600 mb-8 font-urdu leading-[2.2]" dir="rtl">اپنی بکنگ کی فوری تصدیق اور فری ڈیمو حاصل کرنے کے لیے ابھی ہمیں WhatsApp پر میسج کریں۔</p>
                 
                 <div className="flex flex-col gap-3">
                     <button 
@@ -86,7 +108,7 @@ const LeadForm: React.FC = () => {
                     </button>
                     <button 
                         onClick={() => setIsSubmitted(false)}
-                        className="text-gray-400 text-sm hover:underline"
+                        className="text-gray-400 text-sm hover:underline mt-2"
                     >
                         Fill Form Again
                     </button>
@@ -106,12 +128,12 @@ const LeadForm: React.FC = () => {
               📩 آج ہی اپنی اسمارٹ ویب سائٹ حاصل کریں
             </h2>
             <p className="mb-6 font-urdu text-right leading-[2.2]" dir="rtl">
-              فارم پر کریں اور ہم آپ کو فری ڈیمو کال دیں گے۔
+              فارم پر کریں اور ہم آپ کو فری ڈیمو کال دیں گے۔ تمام تفصیلات براہ راست Google Sheet میں محفوظ ہوں گی۔
             </p>
             <ul className="space-y-2 font-urdu text-right leading-[2.2]" dir="rtl">
-                <li className="flex items-center justify-end"> <span className="mr-2">مفت مشاورت</span> ✅</li>
+                <li className="flex items-center justify-end"> <span className="mr-2">محفوظ ڈیٹا انٹری</span> ✅</li>
                 <li className="flex items-center justify-end"> <span className="mr-2">کوئی پوشیدہ چارجز نہیں</span> ✅</li>
-                <li className="flex items-center justify-end"> <span className="mr-2">مکمل سیٹ اپ</span> ✅</li>
+                <li className="flex items-center justify-end"> <span className="mr-2">مکمل سیٹ اپ سپورٹ</span> ✅</li>
             </ul>
           </div>
 
@@ -124,6 +146,7 @@ const LeadForm: React.FC = () => {
                     type="text"
                     name="businessName"
                     required
+                    autoComplete="organization"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right"
                     placeholder="مثال: اے بی سی کار رینٹل"
                     onChange={handleChange}
@@ -136,6 +159,7 @@ const LeadForm: React.FC = () => {
                     type="text"
                     name="ownerName"
                     required
+                    autoComplete="name"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right"
                     placeholder="نام درج کریں"
                     onChange={handleChange}
@@ -148,6 +172,7 @@ const LeadForm: React.FC = () => {
                     type="text"
                     name="city"
                     required
+                    autoComplete="address-level2"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right"
                     placeholder="لاہور / دبئی / کراچی"
                     onChange={handleChange}
@@ -160,6 +185,7 @@ const LeadForm: React.FC = () => {
                     type="tel"
                     name="phone"
                     required
+                    autoComplete="tel"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right font-english"
                     placeholder="03001234567"
                     onChange={handleChange}
@@ -184,7 +210,17 @@ const LeadForm: React.FC = () => {
                 disabled={isLoading}
                 className="w-full flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-lg text-white bg-cta hover:bg-green-600 transition-all shadow-lg font-english disabled:opacity-70"
               >
-                {isLoading ? <Loader2 className="animate-spin" /> : "Request Free Setup Call"}
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="animate-spin w-5 h-5" />
+                    <span>Processing...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span>Request Free Setup Call</span>
+                    <Send className="w-5 h-5" />
+                  </div>
+                )}
               </button>
             </form>
           </div>
