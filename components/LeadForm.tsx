@@ -1,39 +1,17 @@
+
 import React, { useState } from 'react';
-import { Send, CheckCircle, Loader2, MessageCircle } from 'lucide-react';
+import { Send, CheckCircle, Loader2, MessageCircle, AlertCircle } from 'lucide-react';
 import { LeadFormData } from '../types.ts';
 
 /**
- * GOOGLE SHEETS INTEGRATION (DATA DESTINATION):
- * Target Sheet: https://docs.google.com/spreadsheets/d/1kx1ecug5mGiGU8B_hsjQuOXTvUmty3cLNLGLE9Vhu9E/edit
- * 
- * SETUP INSTRUCTIONS:
- * 1. Open the Google Sheet link above (or your own copy).
- * 2. Go to "Extensions" -> "Apps Script".
- * 3. Delete any existing code and paste this:
- * 
- *    function doPost(e) {
- *      var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
- *      var data = JSON.parse(e.postData.contents);
- *      sheet.appendRow([
- *        new Date(), 
- *        data.businessName, 
- *        data.ownerName, 
- *        data.city, 
- *        data.phone, 
- *        data.whatsapp
- *      ]);
- *      return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
- *    }
- * 
- * 4. Click "Deploy" -> "New Deployment".
- * 5. Select "Web App".
- * 6. Execute as: "Me" | Who has access: "Anyone".
- * 7. Copy the "Web App URL" (it starts with https://script.google.com/...)
- * 8. Paste that URL into the GOOGLE_SHEET_URL constant below.
+ * 🚀 GOOGLE APPS SCRIPT INTEGRATION:
+ * The form submits data to the following URL which handles the Google Sheet update.
+ * Using 'text/plain' as Content-Type is a standard 'simple request' that avoids 
+ * CORS pre-flight issues with Google Apps Script.
  */
 
-// IMPORTANT: Replace this placeholder with your actual Apps Script Deployment URL
-const GOOGLE_SHEET_URL = 'PASTE_YOUR_APPS_SCRIPT_DEPLOYMENT_URL_HERE'; 
+// ✅ Your provided Apps Script Web App URL
+const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER = "923001234567";
 
 const LeadForm: React.FC = () => {
@@ -46,6 +24,7 @@ const LeadForm: React.FC = () => {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [urlError, setUrlError] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -53,30 +32,42 @@ const LeadForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUrlError(false);
+
+    if (!GOOGLE_SHEET_URL || !GOOGLE_SHEET_URL.startsWith('https://script.google.com')) {
+      console.error("Invalid GOOGLE_SHEET_URL configuration.");
+      setUrlError(true);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const isUrlConfigured = GOOGLE_SHEET_URL && !GOOGLE_SHEET_URL.includes('PASTE_YOUR');
-
-      if (isUrlConfigured) {
-        // We use mode: 'no-cors' for Google Apps Script redirects
-        await fetch(GOOGLE_SHEET_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          cache: 'no-cache',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, timestamp: new Date().toISOString() }),
-        });
-        console.log("Data successfully sent to Google Sheet script");
-      } else {
-        console.warn("GOOGLE_SHEET_URL is not set. Data not sent. Setup the Apps Script as per instructions.");
-        // Simulate a delay for UX demonstration
-        await new Promise(resolve => setTimeout(resolve, 1500));
-      }
+      /**
+       * 💡 WHY NO-CORS & TEXT/PLAIN?
+       * Apps Script doesn't handle 'application/json' pre-flight (OPTIONS) requests.
+       * By using 'no-cors' and 'text/plain', we send a 'simple request' that
+       * the browser allows and the Apps Script doPost(e) can receive.
+       */
+      await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Critical for cross-origin Apps Script
+        cache: 'no-cache',
+        headers: { 
+          'Content-Type': 'text/plain' // Use safe type to avoid pre-flight
+        },
+        body: JSON.stringify({ 
+          ...formData, 
+          timestamp: new Date().toISOString() 
+        }),
+      });
+      
+      // Because 'no-cors' hide response status, we proceed if fetch didn't throw a network error
+      console.log("Form data sent to Apps Script successfully.");
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Submission error:", error);
-      alert("ہم معذرت خواہ ہیں، ڈیٹا محفوظ نہیں ہو سکا۔ براہ کرم واٹس ایپ پر رابطہ کریں۔");
+      console.error("Submission failed:", error);
+      alert("معذرت، ڈیٹا محفوظ نہیں ہو سکا۔ براہ کرم واٹس ایپ پر رابطہ کریں۔");
     } finally {
       setIsLoading(false);
     }
@@ -95,8 +86,8 @@ const LeadForm: React.FC = () => {
                 <div className="flex justify-center mb-6">
                     <CheckCircle className="w-20 h-20 text-green-500" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4 font-urdu leading-[2.2]" dir="rtl">شکریہ! آپ کی تفصیلات محفوظ کر لی گئی ہیں۔</h3>
-                <p className="text-gray-600 mb-8 font-urdu leading-[2.2]" dir="rtl">اپنی بکنگ کی فوری تصدیق اور فری ڈیمو حاصل کرنے کے لیے ابھی ہمیں WhatsApp پر میسج کریں۔</p>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4 font-urdu leading-[2.2]" dir="rtl">شکریہ! آپ کی تفصیلات موصول ہو گئی ہیں۔</h3>
+                <p className="text-gray-600 mb-8 font-urdu leading-[2.2]" dir="rtl">بکنگ مکمل کرنے کے لیے نیچے دیے گئے بٹن پر کلک کر کے WhatsApp پر تصدیق کریں۔</p>
                 
                 <div className="flex flex-col gap-3">
                     <button 
@@ -121,8 +112,16 @@ const LeadForm: React.FC = () => {
   return (
     <div id="lead-form" className="py-20 bg-gradient-to-br from-primary to-[#052033]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {urlError && (
+          <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg flex items-center gap-3">
+            <AlertCircle className="text-red-600 w-6 h-6 shrink-0" />
+            <p className="text-red-800 text-sm font-urdu leading-relaxed" dir="rtl">
+              ڈیولپر سیٹنگز میں کوئی مسئلہ ہے۔ براہ کرم کنفیگریشن یا URL چیک کریں۔
+            </p>
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row-reverse">
-          
           <div className="bg-secondary p-8 md:w-1/3 flex flex-col justify-center text-primary">
             <h2 className="text-2xl font-bold mb-4 font-urdu text-right leading-[2.2]" dir="rtl">
               📩 آج ہی اپنی اسمارٹ ویب سائٹ حاصل کریں
@@ -146,7 +145,6 @@ const LeadForm: React.FC = () => {
                     type="text"
                     name="businessName"
                     required
-                    autoComplete="organization"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right"
                     placeholder="مثال: اے بی سی کار رینٹل"
                     onChange={handleChange}
@@ -159,7 +157,6 @@ const LeadForm: React.FC = () => {
                     type="text"
                     name="ownerName"
                     required
-                    autoComplete="name"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right"
                     placeholder="نام درج کریں"
                     onChange={handleChange}
@@ -172,9 +169,8 @@ const LeadForm: React.FC = () => {
                     type="text"
                     name="city"
                     required
-                    autoComplete="address-level2"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right"
-                    placeholder="لاہور / دبئی / کراچی"
+                    placeholder="لاہور / کراچی / دبئی"
                     onChange={handleChange}
                   />
                 </div>
@@ -185,7 +181,6 @@ const LeadForm: React.FC = () => {
                     type="tel"
                     name="phone"
                     required
-                    autoComplete="tel"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-right font-english"
                     placeholder="03001234567"
                     onChange={handleChange}
