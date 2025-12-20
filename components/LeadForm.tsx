@@ -52,7 +52,7 @@ const LeadForm: React.FC = () => {
     try {
       // mode: 'no-cors' allows the request to be sent to a different domain without CORS errors.
       // Even though we can't read the response, the data reaches the script successfully.
-      await fetch(GOOGLE_SHEET_URL, {
+      await fetch(https://script.google.com/macros/s/AKfycbzOWe_ySrNu1fj9OH5oY961-r4zsbC0o5FA50on4IikYh4hHjsYQrVP8QqyUoPvLWs7tw/exec, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
