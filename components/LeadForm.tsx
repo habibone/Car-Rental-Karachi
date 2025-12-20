@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { LeadFormData } from '../types.ts';
 
-// Your Script ID from the provided URL
 const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER = "923001234567";
 
@@ -38,7 +37,7 @@ const LeadForm: React.FC = () => {
     setIsLoading(true);
 
     /**
-     * Exact Mapping to Spreadsheet Headers:
+     * MATCHING COLUMNS (A to E):
      * A: Date
      * B: Business Name
      * C: Owner Name
@@ -46,25 +45,15 @@ const LeadForm: React.FC = () => {
      * E: WhatsApp
      */
     const params = new URLSearchParams();
-    
-    // 1. Date (Pakistan Standard Time)
     params.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
-    
-    // 2. Business Name (Matching Column B)
     params.append('Business Name', formData.businessName);
-    
-    // 3. Owner Name (Matching Column C)
     params.append('Owner Name', formData.ownerName);
-    
-    // 4. City (Matching Column D)
     params.append('City', formData.city);
-    
-    // 5. WhatsApp (Matching Column E)
     params.append('WhatsApp', formData.whatsapp);
 
     try {
-      // Using 'no-cors' mode is standard for Google Apps Script POSTs from the browser.
-      // It will return an "opaque" response, but the data will still reach the script.
+      // mode: 'no-cors' allows the request to be sent even if the script doesn't return CORS headers.
+      // The data will still be processed by your doPost(e) function in Apps Script.
       await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -75,12 +64,13 @@ const LeadForm: React.FC = () => {
         body: params.toString(),
       });
       
-      // Success state
+      // We assume success if fetch doesn't throw. 
+      // 'no-cors' doesn't allow reading the actual response body.
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Sheet submission error:", error);
-      // Fallback: Even if sheet fails, we can still redirect to WhatsApp
-      setIsSubmitted(true); 
+      console.error("Submission failed:", error);
+      // Even if sheet fails, we show success to avoid blocking the user from the WhatsApp step
+      setIsSubmitted(true);
     } finally {
       setIsLoading(false);
     }
