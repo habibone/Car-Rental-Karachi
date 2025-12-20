@@ -16,9 +16,9 @@ import { LeadFormData } from '../types.ts';
 
 /** 
  * CONFIGURATION: 
- * 1. Replace this URL with your DEPLOYED Google Apps Script Web App URL
+ * 1. Replace GOOGLE_SHEET_URL with your specific 'Web App' URL (the one ending in /exec)
  */
-const https://thesmartrental.netlify.app/: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
+const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER: string = "923082755999";
 
 const LeadForm: React.FC = () => {
@@ -40,31 +40,28 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // We use URLSearchParams with 'application/x-www-form-urlencoded' 
-    // This is the most reliable way for Google Apps Script to parse 'e.parameter'
-    const params = new URLSearchParams();
-    params.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
-    params.append('Business Name', formData.businessName);
-    params.append('Owner Name', formData.ownerName);
-    params.append('City', formData.city);
-    params.append('WhatsApp', formData.whatsapp);
+    // Using traditional FormData ensures Apps Script populates 'e.parameter' correctly
+    const body = new FormData();
+    body.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
+    body.append('Business Name', formData.businessName);
+    body.append('Owner Name', formData.ownerName);
+    body.append('City', formData.city);
+    body.append('WhatsApp', formData.whatsapp);
 
     try {
-      // mode: 'no-cors' allows the request to fire even if Google doesn't send back CORS headers.
-      // The data will still reach the sheet.
-      await fetch(https://thesmartrental.netlify.app/, {
+      // mode: 'no-cors' is essential for Google Apps Script cross-domain POST
+      await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params.toString(),
+        body: body,
       });
       
+      // Since no-cors doesn't allow reading the response, we assume success 
+      // if the fetch doesn't throw an error.
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Submission error:", error);
-      // Fallback: Proceed to success screen so user can still contact via WhatsApp
+      console.error("Submission failed:", error);
+      // Still show success screen to the user so they can click the WhatsApp button
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
