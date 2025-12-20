@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ur">
   <head>
@@ -11,11 +12,12 @@
         theme: {
           extend: {
             colors: {
-              primary: '#0B3C5D',
-              secondary: '#F4C430',
-              accent: '#FFFFFF',
-              cta: '#00C853',
-              bgLight: '#F3F4F6',
+              primary: '#6366f1', // Indigo 500
+              secondary: '#0f172a', // Slate 900 (Midnight)
+              accent: '#38bdf8', // Sky 400
+              cta: '#38bdf8', // Same as accent for uniformity
+              bgLight: '#f8fafc', // Slate 50
+              surface: '#1e293b', // Slate 800
             },
             fontFamily: {
               urdu: ['"Noto Nastaliq Urdu"', 'serif'],
@@ -27,12 +29,17 @@
     </script>
     <style>
       body {
-        font-family: 'Poppins', sans-serif; /* Default for English */
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.75;
       }
       .font-urdu {
         font-family: 'Noto Nastaliq Urdu', serif;
-        line-height: 2.0; /* Increased line-height for Nastaliq script legibility */
-        padding-top: 4px; /* Slight visual adjustment */
+        line-height: 2.8;
+      }
+      .glass-effect {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
     </style>
   <script type="importmap">
@@ -49,7 +56,7 @@
 }
 </script>
 </head>
-  <body class="bg-bgLight text-slate-800">
+  <body class="bg-secondary text-slate-200">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
   </body>

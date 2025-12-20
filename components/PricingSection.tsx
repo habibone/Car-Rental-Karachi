@@ -1,79 +1,100 @@
-import React from 'react';
-import { Check } from 'lucide-react';
 
-const PricingSection: React.FC = () => {
+import React from 'react';
+import { CheckCircle2, Gift, MousePointer2, Sparkles, Rocket, Zap } from 'lucide-react';
+
+const OfferSection: React.FC = () => {
   const scrollToForm = () => {
       document.getElementById('lead-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <div className="py-16 bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-primary font-urdu sm:text-4xl" dir="rtl">
-            💼 اسمارٹ ویب سائٹ پیکیج
+    <div className="py-32 bg-secondary overflow-hidden relative border-t border-white/5">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-24">
+          <div className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-full font-english font-black text-sm mb-12 shadow-[0_10px_40px_rgba(99,102,241,0.4)] animate-pulse">
+            <Gift className="w-6 h-6" />
+            <span className="uppercase tracking-widest">Limited Time Launch Offer</span>
+          </div>
+          <h2 className="text-4xl md:text-7xl font-black text-white font-urdu leading-[1.8]" dir="rtl">
+            کیا آپ کا بزنس ایک <span className="text-accent italic">خودکار مشین</span> بننے کے لیے تیار ہے؟
           </h2>
-          <p className="mt-4 text-xl text-gray-600 font-urdu" dir="rtl">
-            یہ صرف ایک ویب سائٹ نہیں، یہ ایک مکمل کار رینٹل بزنس سسٹم ہے
-          </p>
+          <div className="h-2 w-64 bg-accent mx-auto mt-12 rounded-full shadow-lg"></div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-secondary relative">
-          <div className="absolute top-0 right-0 bg-secondary text-primary font-bold px-4 py-1 rounded-bl-lg font-english">
-            BEST VALUE
-          </div>
+        {/* Main Premium Card */}
+        <div className="relative group max-w-5xl mx-auto">
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-[4rem] blur opacity-30 group-hover:opacity-60 transition duration-1000"></div>
           
-          <div className="p-8 sm:p-10">
-            <div className="flex justify-center mb-8">
-                <span className="text-5xl font-extrabold text-primary font-english">Complete System</span>
-            </div>
+          <div className="relative bg-surface text-white rounded-[4rem] shadow-2xl overflow-hidden p-10 md:p-20 border border-white/10">
+            <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
             
-            <ul className="space-y-4 font-urdu text-right" dir="rtl">
-              <li className="flex items-start">
-                <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-green-500" />
-                </div>
-                <p className="mr-3 text-lg text-gray-700">پریمیم موبائل ریسپانسیو ڈیزائن</p>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-green-500" />
-                </div>
-                <p className="mr-3 text-lg text-gray-700">واٹس ایپ اور کال بٹن انٹیگریشن</p>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-green-500" />
-                </div>
-                <p className="mr-3 text-lg text-gray-700">بکنگ فارم اور ای میل الرٹس</p>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-green-500" />
-                </div>
-                <p className="mr-3 text-lg text-gray-700">Google میپ اور SEO سیٹ اپ</p>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0">
-                  <Check className="h-6 w-6 text-green-500" />
-                </div>
-                <p className="mr-3 text-lg text-gray-700">1 سال کی فری ہوسٹنگ اور ڈومین سپورٹ</p>
-              </li>
-            </ul>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
+              
+              <div className="text-right order-2 lg:order-1" dir="rtl">
+                <div className="space-y-12">
+                  <div className="flex items-start justify-end gap-8 group/item">
+                    <div className="text-right">
+                      <h4 className="text-2xl font-bold font-urdu text-white mb-2 leading-[1.8]">مفت ڈیمو سیشن</h4>
+                      <p className="text-slate-400 font-urdu text-xl leading-[1.8]">پہلے دیکھیں کہ یہ سسٹم کیسے کام کرتا ہے</p>
+                    </div>
+                    <div className="bg-primary/20 p-5 rounded-2xl group-hover/item:bg-primary transition-colors border border-primary/20">
+                      <Zap className="text-accent w-10 h-10 shrink-0" />
+                    </div>
+                  </div>
 
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-               <button 
-                  onClick={scrollToForm}
-                  className="w-full sm:w-auto bg-cta hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg text-lg font-english shadow-lg transition-transform transform hover:scale-105"
-               >
-                 Start Now
-               </button>
-               <button 
-                  onClick={scrollToForm}
-                  className="w-full sm:w-auto bg-white border-2 border-primary text-primary hover:bg-gray-50 font-bold py-4 px-8 rounded-lg text-lg font-english"
-               >
-                 See Packages
-               </button>
+                  <div className="flex items-start justify-end gap-8 group/item">
+                    <div className="text-right">
+                      <h4 className="text-2xl font-bold font-urdu text-white mb-2 leading-[1.8]">مکمل بزنس آڈٹ</h4>
+                      <p className="text-slate-400 font-urdu text-xl leading-[1.8]">ہم آپ کے بزنس کا فری معائنہ کریں گے</p>
+                    </div>
+                    <div className="bg-primary/20 p-5 rounded-2xl group-hover/item:bg-primary transition-colors border border-primary/20">
+                      <Sparkles className="text-accent w-10 h-10 shrink-0" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-start justify-end gap-8 group/item">
+                    <div className="text-right">
+                      <h4 className="text-2xl font-bold font-urdu text-white mb-2 leading-[1.8]">لائف ٹائم سپورٹ</h4>
+                      <p className="text-slate-400 font-urdu text-xl leading-[1.8]">ہمارے ماہرین ہمیشہ آپ کے ساتھ ہیں</p>
+                    </div>
+                    <div className="bg-primary/20 p-5 rounded-2xl group-hover/item:bg-primary transition-colors border border-primary/20">
+                      <Rocket className="text-accent w-10 h-10 shrink-0" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-20">
+                  <button 
+                    onClick={scrollToForm}
+                    className="w-full bg-accent hover:bg-sky-300 text-secondary font-black py-8 rounded-[3rem] text-4xl font-english shadow-[0_20px_60px_rgba(56,189,248,0.4)] transition-all transform hover:-translate-y-2 flex items-center justify-center gap-8 group/btn"
+                  >
+                    UPGRADE NOW
+                    <MousePointer2 className="w-12 h-12 group-hover/btn:scale-125 transition-transform" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="order-1 lg:order-2 flex flex-col items-center justify-center text-center">
+                <div className="relative">
+                  <div className="absolute inset-[-60px] bg-gradient-to-r from-primary/30 to-accent/30 blur-[80px] opacity-40 animate-pulse"></div>
+                  
+                  <div className="relative bg-secondary/50 backdrop-blur-3xl p-20 md:p-28 rounded-[5rem] border border-white/10 shadow-[inset_0_0_100px_rgba(255,255,255,0.05)] flex flex-col items-center">
+                    <div className="mb-6 inline-flex items-center gap-3 px-6 py-2 bg-primary rounded-full text-xs font-black tracking-widest uppercase text-white shadow-xl">
+                      Automated Pro
+                    </div>
+                    <span className="text-8xl md:text-[12rem] font-black font-english text-white leading-none bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500">
+                      AI
+                    </span>
+                    <div className="mt-12 flex items-center gap-6">
+                      <div className="h-[2px] w-12 bg-accent/30"></div>
+                      <p className="text-3xl font-urdu text-accent font-black leading-[1.8]" dir="rtl">اسمارٹ رینٹل</p>
+                      <div className="h-[2px] w-12 bg-accent/30"></div>
+                    </div>
+                    <p className="mt-6 text-slate-400 font-urdu text-2xl leading-[1.8]" dir="rtl">سب کچھ آٹو پائلٹ پر</p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -82,4 +103,4 @@ const PricingSection: React.FC = () => {
   );
 };
 
-export default PricingSection;
+export default OfferSection;

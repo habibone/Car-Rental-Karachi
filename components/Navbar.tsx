@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
@@ -11,28 +12,30 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-primary text-white shadow-md sticky top-0 z-50">
+    <nav className="bg-secondary/90 backdrop-blur-md text-white shadow-xl sticky top-0 z-50 border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex-shrink-0 font-english font-bold text-2xl tracking-wider">
-            Smart<span className="text-secondary">Rental</span>
+        <div className="flex items-center justify-between h-20">
+          <div className="flex-shrink-0 font-english font-black text-2xl tracking-tighter flex items-center gap-2">
+            <span className="bg-accent px-3 py-1 rounded-lg text-secondary font-black italic">SMART</span>
+            <span className="text-white">RENTAL</span>
           </div>
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex items-center space-x-8">
+              <span className="text-slate-400 text-sm font-urdu" dir="rtl">آٹومیٹڈ کار رینٹل سسٹم</span>
               <button 
                 onClick={scrollToForm}
-                className="bg-cta hover:bg-green-600 text-white font-english px-6 py-2 rounded-full font-bold transition-all shadow-lg transform hover:scale-105"
+                className="bg-accent hover:bg-sky-300 text-secondary font-english px-8 py-3 rounded-2xl font-black transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)] transform hover:-translate-y-1 active:scale-95"
               >
-                Get Started
+                GET STARTED
               </button>
             </div>
           </div>
           <div className="-mr-2 flex md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-blue-800 focus:outline-none"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
             </button>
           </div>
         </div>
@@ -40,15 +43,13 @@ const Navbar: React.FC = () => {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-primary pb-4">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center">
+        <div className="md:hidden bg-secondary pb-8 border-t border-white/5 px-6 pt-6 animate-in slide-in-from-top-4">
              <button 
                 onClick={scrollToForm}
-                className="bg-cta text-white font-english w-full py-3 rounded-lg font-bold shadow-md"
+                className="bg-accent text-secondary font-black font-english w-full py-5 rounded-2xl shadow-lg text-xl"
               >
-                Get Started
+                GET STARTED
               </button>
-          </div>
         </div>
       )}
     </nav>
