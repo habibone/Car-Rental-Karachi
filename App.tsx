@@ -11,6 +11,7 @@ import SocialProof from './components/SocialProof.tsx';
 import OfferSection from './components/PricingSection.tsx';
 import Footer from './components/Footer.tsx';
 import StickyCTA from './components/StickyCTA.tsx';
+import FloatingWhatsApp from './components/FloatingWhatsApp.tsx';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
       </main>
       <Footer />
       <StickyCTA />
+      <FloatingWhatsApp />
     </div>
   );
 }

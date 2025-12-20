@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Chat } from "@google/genai";
 
 const FloatingWhatsApp: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +10,7 @@ const FloatingWhatsApp: React.FC = () => {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<Chat | null>(null);
   
   const whatsappNumber = "923001234567";
 
@@ -25,14 +27,31 @@ const FloatingWhatsApp: React.FC = () => {
     }
   }, [messages, isTyping]);
 
+  // Initialize Chat Session
   useEffect(() => {
-    if (isOpen && messages.length === 0) {
-      setMessages([{
-        role: 'bot',
-        text: "السلام علیکم! 👋 میں آپ کا اسمارٹ رینٹل اسسٹنٹ ہوں۔ میں آپ کے کار رینٹل بزنس کو آٹومیٹ کرنے میں کیسے مدد کر سکتا ہوں؟"
-      }]);
+    if (isOpen && !chatRef.current) {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      chatRef.current = ai.chats.create({
+        model: 'gemini-3-flash-preview',
+        config: {
+          systemInstruction: `You are a professional sales assistant for a "Smart Car Rental Website" service in Pakistan. 
+          Your goals:
+          1. Briefly explain how our automation (chatbot, auto-booking, WhatsApp integration) helps car rental owners save time and increase bookings.
+          2. Speak primarily in Roman Urdu (e.g., "Aapka business auto-pilot par chalega") or Urdu script (Nastaliq style).
+          3. Be polite, concise, and encourage the user to fill out the form or click the WhatsApp button.
+          4. If they ask about pricing, mention we have "Best Value" custom packages starting at affordable rates.
+          5. Keep responses friendly and under 50 words.`,
+        },
+      });
+
+      if (messages.length === 0) {
+        setMessages([{
+          role: 'bot',
+          text: "السلام علیکم! 👋 میں آپ کا اسمارٹ رینٹل اسسٹنٹ ہوں۔ میں آپ کے کار رینٹل بزنس کو آٹومیٹ کرنے میں کیسے مدد کر سکتا ہوں؟"
+        }]);
+      }
     }
-  }, [isOpen, messages.length]);
+  }, [isOpen]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -41,7 +60,7 @@ const FloatingWhatsApp: React.FC = () => {
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim() || isTyping) return;
+    if (!input.trim() || isTyping || !chatRef.current) return;
 
     const userMessage = input.trim();
     setInput('');
@@ -49,26 +68,12 @@ const FloatingWhatsApp: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-flash-preview',
-        contents: userMessage,
-        config: {
-          systemInstruction: `You are a professional sales assistant for a "Smart Car Rental Website" service. 
-          Your goals:
-          1. Briefly explain how our automation (chatbot, auto-booking, WhatsApp integration) helps car rental owners.
-          2. Speak primarily in Roman Urdu or Urdu script (Nastaliq style) to match the website theme.
-          3. Be polite, concise, and encourage the user to click the "Confirm on WhatsApp" or "Get Started" buttons.
-          4. If they ask about pricing, mention we have "Best Value" custom packages.
-          5. Keep responses under 60 words.`,
-        },
-      });
-
-      const botText = response.text || "جی، میں آپ کی بات سمجھ گیا۔ کیا آپ مزید معلومات کے لیے ہمارے واٹس ایپ پر رابطہ کرنا چاہیں گے؟";
+      const response = await chatRef.current.sendMessage({ message: userMessage });
+      const botText = response.text || "Ji, main aapki baat samajh gaya. Kya aap free demo book karna chahen ge?";
       setMessages(prev => [...prev, { role: 'bot', text: botText }]);
     } catch (error) {
-      console.error("AI Error:", error);
-      setMessages(prev => [...prev, { role: 'bot', text: "معذرت، سسٹم میں کچھ خرابی ہے۔ آپ براہ راست واٹس ایپ پر رابطہ کر سکتے ہیں۔" }]);
+      console.error("AI Chat Error:", error);
+      setMessages(prev => [...prev, { role: 'bot', text: "Maazrat, system mein masla hai. Aap direct WhatsApp par rabta kar sakte hain." }]);
     } finally {
       setIsTyping(false);
     }
@@ -87,7 +92,7 @@ const FloatingWhatsApp: React.FC = () => {
               </div>
               <div>
                 <h4 className="font-bold text-sm">Smart AI Assistant</h4>
-                <p className="text-[10px] text-green-200">Online | Fast Support</p>
+                <p className="text-[10px] text-green-200">Online | Auto-Pilot</p>
               </div>
             </div>
             <button onClick={toggleChat} className="text-white hover:bg-black/10 p-1 rounded-full">
@@ -113,7 +118,7 @@ const FloatingWhatsApp: React.FC = () => {
             {isTyping && (
               <div className="bg-white p-3 rounded-lg rounded-tl-none shadow-sm self-start flex items-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin text-green-600" />
-                <span className="text-xs text-gray-400">Assistant is typing...</span>
+                <span className="text-xs text-gray-400">Assistant is thinking...</span>
               </div>
             )}
           </div>
@@ -124,7 +129,7 @@ const FloatingWhatsApp: React.FC = () => {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your question..."
+              placeholder="Sawaal likhain..."
               className="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#075e54]"
             />
             <button 
@@ -143,7 +148,7 @@ const FloatingWhatsApp: React.FC = () => {
               rel="noopener noreferrer"
               className="w-full bg-[#25D366] text-white py-2 rounded-full flex items-center justify-center gap-2 font-bold text-xs hover:bg-green-600 transition-colors shadow-md"
             >
-              Transfer to Real WhatsApp
+              Talk to Owner on WhatsApp
               <MessageCircle className="w-4 h-4" />
             </a>
           </div>

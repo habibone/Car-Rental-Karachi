@@ -14,15 +14,19 @@ import {
 } from 'lucide-react';
 import { LeadFormData } from '../types.ts';
 
-// Your Script URL
+/** 
+ * CONFIGURATION: 
+ * 1. Replace this URL with your new Google Apps Script Web App URL
+ * 2. Update the WhatsApp number to your business number
+ */
 const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
-const WHATSAPP_BUSINESS_NUMBER = "923001234567";
+const WHATSAPP_BUSINESS_NUMBER: string = "923082755999";
 
 const LeadForm: React.FC = () => {
   const [formData, setFormData] = useState<LeadFormData>({
     businessName: '',
     ownerName: '',
-    phone: '',
+    phone: '', // Optional fallback
     whatsapp: '',
     city: ''
   });
@@ -37,14 +41,7 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    /**
-     * EXACT COLUMN MAPPING:
-     * Column A: Date
-     * Column B: Business Name
-     * Column C: Owner Name
-     * Column D: City
-     * Column E: WhatsApp
-     */
+    // Using FormData is often more robust for 'no-cors' requests to GAS
     const data = new FormData();
     data.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
     data.append('Business Name', formData.businessName);
@@ -53,25 +50,18 @@ const LeadForm: React.FC = () => {
     data.append('WhatsApp', formData.whatsapp);
 
     try {
-      /**
-       * We use 'no-cors' mode because Google Apps Script does not return 
-       * standard CORS headers for browser-based POST requests. 
-       * Using FormData ensures the browser sends the request in a format 
-       * Google Scripts usually parse into the 'e.parameter' object.
-       */
-      await fetch(GOOGLE_SHEET_URL, {
+      // mode: 'no-cors' is mandatory for GAS unless you handle complex CORS in the script.
+      // The browser will successfully send the data but won't let us read the 'Success' response body.
+      await fetch(https://thesmartrental.netlify.app/, {
         method: 'POST',
         mode: 'no-cors',
         body: data,
       });
       
-      // Since 'no-cors' doesn't let us read the result, 
-      // we assume the browser successfully dispatched the data.
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
-      // We still transition to the WhatsApp step even if the sheet fails 
-      // to ensure the lead is not lost.
+      // We show the success screen anyway to ensure the user proceeds to the WhatsApp confirmation
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
@@ -89,11 +79,11 @@ const LeadForm: React.FC = () => {
         <div id="lead-form" className="py-32 bg-secondary flex items-center justify-center px-4 min-h-[700px]">
             <div className="bg-surface rounded-[4rem] shadow-2xl p-16 max-w-2xl w-full text-center border border-accent/20 animate-in zoom-in duration-500">
                 <div className="w-32 h-32 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
-                  <CheckCircle className="w-20 h-20 text-accent" />
+                  <CheckCircle className="w-20 h-20 text-accent animate-pulse" />
                 </div>
-                <h3 className="text-4xl font-black text-white mb-8 font-english text-left">Details Received!</h3>
-                <p className="text-2xl text-slate-400 mb-12 font-english leading-relaxed text-left">
-                  Thank you! One last step: click the button below to confirm your free demo via WhatsApp.
+                <h3 className="text-4xl font-black text-white mb-8 font-urdu" dir="rtl">شکریہ! تفصیلات موصول ہو گئیں۔</h3>
+                <p className="text-2xl text-slate-400 mb-12 font-urdu leading-relaxed" dir="rtl">
+                  آخری مرحلہ: نیچے دیے گئے بٹن پر کلک کر کے واٹس ایپ پر اپنا فری ڈیمو کنفرم کریں۔
                 </p>
                 <button 
                     onClick={handleWhatsAppConfirm}
