@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { LeadFormData } from '../types.ts';
 
+// Your Script URL
 const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER = "923001234567";
 
@@ -37,39 +38,40 @@ const LeadForm: React.FC = () => {
     setIsLoading(true);
 
     /**
-     * MATCHING COLUMNS (A to E):
-     * A: Date
-     * B: Business Name
-     * C: Owner Name
-     * D: City
-     * E: WhatsApp
+     * EXACT COLUMN MAPPING:
+     * Column A: Date
+     * Column B: Business Name
+     * Column C: Owner Name
+     * Column D: City
+     * Column E: WhatsApp
      */
-    const params = new URLSearchParams();
-    params.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
-    params.append('Business Name', formData.businessName);
-    params.append('Owner Name', formData.ownerName);
-    params.append('City', formData.city);
-    params.append('WhatsApp', formData.whatsapp);
+    const data = new FormData();
+    data.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
+    data.append('Business Name', formData.businessName);
+    data.append('Owner Name', formData.ownerName);
+    data.append('City', formData.city);
+    data.append('WhatsApp', formData.whatsapp);
 
     try {
-      // mode: 'no-cors' allows the request to be sent even if the script doesn't return CORS headers.
-      // The data will still be processed by your doPost(e) function in Apps Script.
+      /**
+       * We use 'no-cors' mode because Google Apps Script does not return 
+       * standard CORS headers for browser-based POST requests. 
+       * Using FormData ensures the browser sends the request in a format 
+       * Google Scripts usually parse into the 'e.parameter' object.
+       */
       await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params.toString(),
+        body: data,
       });
       
-      // We assume success if fetch doesn't throw. 
-      // 'no-cors' doesn't allow reading the actual response body.
+      // Since 'no-cors' doesn't let us read the result, 
+      // we assume the browser successfully dispatched the data.
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Submission failed:", error);
-      // Even if sheet fails, we show success to avoid blocking the user from the WhatsApp step
+      console.error("Submission error:", error);
+      // We still transition to the WhatsApp step even if the sheet fails 
+      // to ensure the lead is not lost.
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
@@ -89,8 +91,8 @@ const LeadForm: React.FC = () => {
                 <div className="w-32 h-32 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
                   <CheckCircle className="w-20 h-20 text-accent" />
                 </div>
-                <h3 className="text-4xl font-black text-white mb-8 font-english">Details Received!</h3>
-                <p className="text-2xl text-slate-400 mb-12 font-english leading-relaxed">
+                <h3 className="text-4xl font-black text-white mb-8 font-english text-left">Details Received!</h3>
+                <p className="text-2xl text-slate-400 mb-12 font-english leading-relaxed text-left">
                   Thank you! One last step: click the button below to confirm your free demo via WhatsApp.
                 </p>
                 <button 
