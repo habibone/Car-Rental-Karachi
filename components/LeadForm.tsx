@@ -39,19 +39,19 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Manual date construction for maximum compatibility with Google Sheets
-    // Formats exactly as: DD/MM/YYYY HH:MM:SS (No comma)
+    // Manual date construction for "m/d/yyyy HH:mm:ss" format
+    // This format (Month/Day/Year) is often required by Google Sheets with US locale settings
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     
-    const day = pad(now.getDate());
-    const month = pad(now.getMonth() + 1);
-    const year = now.getFullYear();
+    const month = now.getMonth() + 1; // m (no leading zero)
+    const day = now.getDate();        // d (no leading zero)
+    const year = now.getFullYear();   // yyyy
     const hours = pad(now.getHours());
     const minutes = pad(now.getMinutes());
     const seconds = pad(now.getSeconds());
     
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    const formattedDate = `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
 
     const params = new URLSearchParams();
     params.append('Date', formattedDate);
@@ -73,6 +73,7 @@ const LeadForm: React.FC = () => {
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission failed:", error);
+      // Fallback: show success screen even on network error so user can use WhatsApp
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
