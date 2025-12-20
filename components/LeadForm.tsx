@@ -16,8 +16,7 @@ import { LeadFormData } from '../types.ts';
 
 /** 
  * CONFIGURATION: 
- * 1. Replace this URL with your new Google Apps Script Web App URL
- * 2. Update the WhatsApp number to your business number
+ * 1. Replace this URL with your DEPLOYED Google Apps Script Web App URL
  */
 const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER: string = "923082755999";
@@ -26,7 +25,7 @@ const LeadForm: React.FC = () => {
   const [formData, setFormData] = useState<LeadFormData>({
     businessName: '',
     ownerName: '',
-    phone: '', // Optional fallback
+    phone: '', 
     whatsapp: '',
     city: ''
   });
@@ -41,27 +40,31 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Using FormData is often more robust for 'no-cors' requests to GAS
-    const data = new FormData();
-    data.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
-    data.append('Business Name', formData.businessName);
-    data.append('Owner Name', formData.ownerName);
-    data.append('City', formData.city);
-    data.append('WhatsApp', formData.whatsapp);
+    // We use URLSearchParams with 'application/x-www-form-urlencoded' 
+    // This is the most reliable way for Google Apps Script to parse 'e.parameter'
+    const params = new URLSearchParams();
+    params.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
+    params.append('Business Name', formData.businessName);
+    params.append('Owner Name', formData.ownerName);
+    params.append('City', formData.city);
+    params.append('WhatsApp', formData.whatsapp);
 
     try {
-      // mode: 'no-cors' is mandatory for GAS unless you handle complex CORS in the script.
-      // The browser will successfully send the data but won't let us read the 'Success' response body.
-      await fetch(https://thesmartrental.netlify.app/, {
+      // mode: 'no-cors' allows the request to fire even if Google doesn't send back CORS headers.
+      // The data will still reach the sheet.
+      await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
-        body: data,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
       });
       
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission error:", error);
-      // We show the success screen anyway to ensure the user proceeds to the WhatsApp confirmation
+      // Fallback: Proceed to success screen so user can still contact via WhatsApp
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
