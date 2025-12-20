@@ -40,19 +40,29 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    // Format date as: DD/MM/YYYY, HH:MM:SS
+    const formattedDate = new Date().toLocaleString('en-GB', { 
+      timeZone: 'Asia/Karachi',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).replace(/\//g, '/');
+
     // Using URLSearchParams ensures the content type is application/x-www-form-urlencoded
-    // which is the most reliable way for Google Apps Script to parse 'e.parameter'
     const params = new URLSearchParams();
-    params.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
+    params.append('Date', formattedDate);
     params.append('Business Name', formData.businessName);
     params.append('Owner Name', formData.ownerName);
     params.append('City', formData.city);
     params.append('WhatsApp', formData.whatsapp);
 
     try {
-      // mode: 'no-cors' allows the request to be sent to a different domain without CORS errors.
-      // Even though we can't read the response, the data reaches the script successfully.
-      await fetch(https://script.google.com/macros/s/AKfycbzOWe_ySrNu1fj9OH5oY961-r4zsbC0o5FA50on4IikYh4hHjsYQrVP8QqyUoPvLWs7tw/exec, {
+      // Corrected to use the variable GOOGLE_SHEET_URL
+      await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
@@ -64,8 +74,7 @@ const LeadForm: React.FC = () => {
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission failed:", error);
-      // In case of any network error, we still proceed to the success screen 
-      // so the lead can complete the process via the WhatsApp button.
+      // Fallback: Proceed to success screen so lead can still contact via WhatsApp
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
