@@ -18,7 +18,7 @@ import { LeadFormData } from '../types.ts';
  * CONFIGURATION: 
  * 1. Replace this URL with your DEPLOYED Google Apps Script Web App URL
  */
-const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
+const https://thesmartrental.netlify.app/: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER: string = "923082755999";
 
 const LeadForm: React.FC = () => {
@@ -52,7 +52,7 @@ const LeadForm: React.FC = () => {
     try {
       // mode: 'no-cors' allows the request to fire even if Google doesn't send back CORS headers.
       // The data will still reach the sheet.
-      await fetch(GOOGLE_SHEET_URL, {
+      await fetch(https://thesmartrental.netlify.app/, {
         method: 'POST',
         mode: 'no-cors',
         headers: {
