@@ -16,7 +16,6 @@ import { LeadFormData } from '../types.ts';
 
 /** 
  * CONFIGURATION: 
- * Updated with your new Google Apps Script Web App URL
  */
 const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbzUEKQitpFYRnNpmyeFxWZ8rKxWPplbpd52tdknLpq6uzts540NFEgp4oMpHng50HgoIQ/exec'; 
 const WHATSAPP_BUSINESS_NUMBER: string = "923082755999";
@@ -40,19 +39,20 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Format date as: DD/MM/YYYY, HH:MM:SS
-    const formattedDate = new Date().toLocaleString('en-GB', { 
-      timeZone: 'Asia/Karachi',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    }).replace(/\//g, '/');
+    // Manual date construction for maximum compatibility with Google Sheets
+    // Formats exactly as: DD/MM/YYYY HH:MM:SS (No comma)
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    
+    const day = pad(now.getDate());
+    const month = pad(now.getMonth() + 1);
+    const year = now.getFullYear();
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    const seconds = pad(now.getSeconds());
+    
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 
-    // Using URLSearchParams ensures the content type is application/x-www-form-urlencoded
     const params = new URLSearchParams();
     params.append('Date', formattedDate);
     params.append('Business Name', formData.businessName);
@@ -61,7 +61,6 @@ const LeadForm: React.FC = () => {
     params.append('WhatsApp', formData.whatsapp);
 
     try {
-      // Corrected to use the variable GOOGLE_SHEET_URL
       await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -74,7 +73,6 @@ const LeadForm: React.FC = () => {
       setIsSubmitted(true);
     } catch (error) {
       console.error("Submission failed:", error);
-      // Fallback: Proceed to success screen so lead can still contact via WhatsApp
       setIsSubmitted(true);
     } finally {
       setIsLoading(false);
