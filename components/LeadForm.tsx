@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { LeadFormData } from '../types.ts';
 
+// Your Script ID from the provided URL
 const GOOGLE_SHEET_URL: string = 'https://script.google.com/macros/s/AKfycbxbMfOCV4AnB9UhSAzCdsmXZTzqE4UCOC2TcFS-QAc8asJ5uR2RMSsFgvycvEY3radqdg/exec'; 
 const WHATSAPP_BUSINESS_NUMBER = "923001234567";
 
@@ -36,25 +37,57 @@ const LeadForm: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    /**
+     * Exact Mapping to Spreadsheet Headers:
+     * A: Date
+     * B: Business Name
+     * C: Owner Name
+     * D: City
+     * E: WhatsApp
+     */
+    const params = new URLSearchParams();
+    
+    // 1. Date (Pakistan Standard Time)
+    params.append('Date', new Date().toLocaleString('en-GB', { timeZone: 'Asia/Karachi' }));
+    
+    // 2. Business Name (Matching Column B)
+    params.append('Business Name', formData.businessName);
+    
+    // 3. Owner Name (Matching Column C)
+    params.append('Owner Name', formData.ownerName);
+    
+    // 4. City (Matching Column D)
+    params.append('City', formData.city);
+    
+    // 5. WhatsApp (Matching Column E)
+    params.append('WhatsApp', formData.whatsapp);
+
     try {
+      // Using 'no-cors' mode is standard for Google Apps Script POSTs from the browser.
+      // It will return an "opaque" response, but the data will still reach the script.
       await fetch(GOOGLE_SHEET_URL, {
         method: 'POST',
         mode: 'no-cors',
         cache: 'no-cache',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ ...formData, timestamp: new Date().toISOString() }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
       });
+      
+      // Success state
       setIsSubmitted(true);
     } catch (error) {
-      console.error("Submission failed:", error);
-      alert("Error saving data. Please contact via WhatsApp.");
+      console.error("Sheet submission error:", error);
+      // Fallback: Even if sheet fails, we can still redirect to WhatsApp
+      setIsSubmitted(true); 
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleWhatsAppConfirm = () => {
-    const text = `Assalam o Alaikum! I'm interested in the Smart Rental System.\n\nBusiness: ${formData.businessName}\nOwner: ${formData.ownerName}\nCity: ${formData.city}`;
+    const text = `Assalam o Alaikum! I'm interested in the Smart Rental System.\n\nBusiness: ${formData.businessName}\nOwner: ${formData.ownerName}\nCity: ${formData.city}\nWhatsApp: ${formData.whatsapp}`;
     const url = `https://wa.me/${WHATSAPP_BUSINESS_NUMBER}?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank');
   };
@@ -127,6 +160,7 @@ const LeadForm: React.FC = () => {
                        type="text" 
                        name="businessName" 
                        required 
+                       autoComplete="organization"
                        className="w-full pl-16 pr-8 py-6 bg-secondary/50 border border-white/5 rounded-3xl focus:ring-4 focus:ring-accent/10 focus:border-accent outline-none transition-all text-xl font-bold text-white shadow-xl" 
                        placeholder="e.g. Luxury Rentals PK" 
                        onChange={handleChange} 
@@ -143,6 +177,7 @@ const LeadForm: React.FC = () => {
                         type="text" 
                         name="ownerName" 
                         required 
+                        autoComplete="name"
                         className="w-full pl-16 pr-8 py-6 bg-secondary/50 border border-white/5 rounded-3xl focus:ring-4 focus:ring-accent/10 focus:border-accent outline-none transition-all text-xl font-bold text-white shadow-xl" 
                         placeholder="Owner Name" 
                         onChange={handleChange} 
@@ -158,6 +193,7 @@ const LeadForm: React.FC = () => {
                         type="text" 
                         name="city" 
                         required 
+                        autoComplete="address-level2"
                         className="w-full pl-16 pr-8 py-6 bg-secondary/50 border border-white/5 rounded-3xl focus:ring-4 focus:ring-accent/10 focus:border-accent outline-none transition-all text-xl font-bold text-white shadow-xl" 
                         placeholder="Karachi / Lahore" 
                         onChange={handleChange} 
@@ -174,6 +210,7 @@ const LeadForm: React.FC = () => {
                        type="tel" 
                        name="whatsapp" 
                        required 
+                       autoComplete="tel"
                        className="w-full pl-16 pr-8 py-6 bg-secondary/50 border border-white/5 rounded-3xl focus:ring-4 focus:ring-accent/10 focus:border-accent outline-none transition-all font-english text-2xl font-black text-white shadow-xl tracking-[0.2em]" 
                        placeholder="03XXXXXXXXX" 
                        onChange={handleChange} 
