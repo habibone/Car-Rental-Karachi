@@ -85,14 +85,10 @@ const SolutionSection: React.FC = () => {
     <div className="py-32 bg-secondary relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-28">
-          <div className="inline-flex items-center gap-2 px-6 py-2 bg-white/5 border border-white/10 rounded-full shadow-sm mb-10">
-            <Sparkles className="w-5 h-5 text-accent" />
-            <span className="text-xs font-black font-english tracking-[0.4em] text-slate-400 uppercase">Our Capabilities</span>
-          </div>
-          <h2 className="text-4xl md:text-7xl font-black text-white font-urdu leading-[1.8]" dir="rtl">
-            ہم آپ کے لیے کیا <span className="text-accent italic">بناتے ہیں؟</span>
+          <h2 className="text-4xl md:text-7xl font-black text-white font-urdu leading-[1.5]" dir="rtl">
+            ہم آپ کے لیے کیا <span className="text-accent">بناتے ہیں؟</span>
           </h2>
-          <p className="mt-10 text-2xl md:text-3xl text-slate-400 font-urdu max-w-3xl mx-auto leading-[1.8]" dir="rtl">
+          <p className="mt-10 text-2xl md:text-3xl text-slate-400 font-urdu max-w-3xl mx-auto leading-relaxed" dir="rtl">
             ہم صرف ویب سائٹ نہیں بناتے، ہم آپ کے رینٹل بزنس کے لیے ایک مکمل ڈیجیٹل سیلز ٹیم تیار کرتے ہیں۔
           </p>
         </div>
@@ -101,7 +97,7 @@ const SolutionSection: React.FC = () => {
           {featureGroups.map((group, groupIdx) => (
             <div key={groupIdx}>
               <div className="flex items-center gap-6 mb-12" dir="rtl">
-                <h3 className="text-2xl font-black font-urdu text-white whitespace-nowrap leading-[1.8]">{group.pillarUrdu}</h3>
+                <h3 className="text-2xl font-black font-urdu text-white whitespace-nowrap leading-relaxed">{group.pillarUrdu}</h3>
                 <div className="h-px w-full bg-white/10"></div>
                 <span className="text-xs font-bold font-english text-primary whitespace-nowrap tracking-widest uppercase" dir="ltr">{group.pillar}</span>
               </div>
@@ -122,7 +118,7 @@ const SolutionSection: React.FC = () => {
                       </h4>
                     </div>
                     
-                    <p className="text-xl text-slate-400 font-urdu leading-[1.8]">
+                    <p className="text-xl text-slate-400 font-urdu leading-relaxed">
                       {feature.desc}
                     </p>
 

@@ -18,13 +18,8 @@ const Footer: React.FC = () => {
       {/* FINAL CTA SECTION */}
       <div className="py-32 px-4 text-center bg-gradient-to-br from-secondary via-surface to-secondary relative overflow-hidden">
          <div className="max-w-5xl mx-auto relative z-10">
-            <div className="inline-flex items-center gap-3 mb-10 bg-white/5 border border-white/10 px-6 py-3 rounded-full backdrop-blur-sm">
-                <Zap className="w-5 h-5 text-accent fill-accent" />
-                <span className="text-xs font-black font-english tracking-[0.4em] text-accent uppercase">Final Step to Growth</span>
-            </div>
-
             <h2 className="text-4xl md:text-7xl font-black font-urdu mb-12 leading-[1.8] text-white" dir="rtl">
-                ابھی اپنی کار رینٹل ویب سائٹ کو <span className="text-accent italic">اپ گریڈ</span> کریں
+                ابھی اپنی کار رینٹل ویب سائٹ کو <span className="text-accent">اپ گریڈ</span> کریں
             </h2>
             <p className="text-2xl md:text-4xl text-slate-400 mb-20 font-urdu leading-[1.8] max-w-4xl mx-auto" dir="rtl">
                 آج فیصلہ کریں، کل سے 24/7 بکنگ شروع کریں

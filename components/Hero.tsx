@@ -21,22 +21,15 @@ const Hero: React.FC = () => {
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pt-20 pb-24 text-center">
         <div className="max-w-5xl mx-auto">
-          {/* Top Badge */}
-          <div className="inline-flex items-center gap-3 bg-white/5 text-accent px-6 py-3 rounded-full font-english font-black text-xs mb-10 border border-white/10 shadow-[0_0_30px_rgba(56,189,248,0.1)] backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-1000">
-            <Zap className="w-5 h-5 fill-accent" />
-            <span className="tracking-[0.4em] uppercase">The Future of Car Rentals</span>
-            <Sparkles className="w-4 h-4" />
-          </div>
-          
-          {/* Main Heading - Adjusted leading and decreased size */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white font-urdu leading-[1.8] md:leading-[1.7] mb-12 max-w-4xl mx-auto" dir="rtl">
+          {/* Main Heading - Adjusted for desktop with precise leading (1.3) for an extremely compact professional calligraphic look */}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-bold text-white font-urdu leading-[1.2] lg:leading-[1.3] mb-12 max-w-5xl mx-auto" dir="rtl">
             اپنی رینٹل ویب سائٹ کو <br />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent via-primary to-accent bg-[size:200%] animate-gradient">24/7 بکنگ مشین</span> بنائیں
           </h1>
           
           {/* Subheading */}
-          <p className="mt-8 text-xl md:text-3xl text-slate-400 font-urdu leading-[1.8] mb-16 max-w-4xl mx-auto" dir="rtl">
-            ایک ایسی اسمارٹ ویب سائٹ جو خودکار بکنگ، فوری رابطہ، اور زیادہ گاہک لانے کے لیے ڈیزائن کی گئی ہو۔ <span className="text-accent font-bold italic underline decoration-accent/20 underline-offset-8">آج ہی اپنا بزنس آٹو پائلٹ پر ڈالیں!</span>
+          <p className="mt-8 text-xl md:text-3xl text-slate-400 font-urdu leading-[2.1] mb-16 max-w-4xl mx-auto" dir="rtl">
+            ایک ایسی اسمارٹ ویب سائٹ جو خودکار بکنگ، فوری رابطہ، اور زیادہ گاہک لانے کے لیے ڈیزائن کی گئی ہو۔ <span className="text-accent font-bold underline decoration-accent/20 underline-offset-8">آج ہی اپنا بزنس آٹو پائلٹ پر ڈالیں!</span>
           </p>
           
           {/* Action Buttons */}

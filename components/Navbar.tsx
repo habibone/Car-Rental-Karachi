@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-8">
-              <span className="text-slate-400 text-sm font-urdu" dir="rtl">آٹومیٹڈ کار رینٹل سسٹم</span>
+              <span className="text-slate-400 text-sm font-urdu-sans font-bold" dir="rtl">آٹومیٹڈ کار رینٹل سسٹم</span>
               <button 
                 onClick={scrollToForm}
                 className="bg-accent hover:bg-sky-300 text-secondary font-english px-8 py-3 rounded-2xl font-black transition-all shadow-[0_0_20px_rgba(56,189,248,0.3)] transform hover:-translate-y-1 active:scale-95"

@@ -20,13 +20,8 @@ const ProblemSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-24">
-          <div className="inline-flex items-center gap-3 px-6 py-2 bg-accent/10 text-accent rounded-full font-black mb-8 border border-accent/20 backdrop-blur-sm shadow-[0_0_20px_rgba(56,189,248,0.1)]">
-            <AlertCircle className="w-5 h-5 animate-pulse" />
-            <span className="font-english text-xs uppercase tracking-[0.4em]">Critical Gaps Identified</span>
-          </div>
-          
-          <h2 className="text-3xl md:text-6xl font-black text-white font-urdu leading-[1.7]" dir="rtl">
-            کیا آپ کا رینٹل بزنس یہ <span className="text-accent italic drop-shadow-[0_0_15px_rgba(56,189,248,0.3)]">مسائل</span> فیس کر رہا ہے؟
+          <h2 className="text-4xl md:text-6xl font-bold text-white font-urdu leading-[2.1]" dir="rtl">
+            کیا آپ کا رینٹل بزنس یہ <span className="text-accent drop-shadow-[0_0_15px_rgba(56,189,248,0.3)]">مسائل</span> فیس کر رہا ہے؟
           </h2>
           
           <div className="w-48 h-1.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mt-12 rounded-full opacity-50"></div>
@@ -47,24 +42,24 @@ const ProblemSection: React.FC = () => {
                 </div>
               </div>
               
-              <p className="text-2xl font-bold text-slate-300 font-urdu leading-[1.8] relative z-10 group-hover:text-white transition-colors">
+              <p className="text-2xl font-bold text-slate-300 font-urdu leading-[2.1] relative z-10 group-hover:text-white transition-colors">
                 {problem}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Bottom Contextual Note with custom blink effect */}
+        {/* Bottom Contextual Note with custom blink effect and bright yellow color */}
         <div className="mt-20 text-center relative z-10">
-           <p className="text-slate-500 font-urdu text-xl leading-[1.8] animate-blink" dir="rtl">
-             یہ صرف عام مسائل نہیں ہیں، یہ آپ کے بزنس کا <span className="text-accent font-bold">پرافٹ</span> ضائع کر رہے ہیں۔
+           <p className="text-yellow-400 font-urdu text-xl md:text-2xl leading-[2.1] animate-blink drop-shadow-[0_0_10px_rgba(250,204,21,0.2)]" dir="rtl">
+             یہ صرف عام مسائل نہیں ہیں، یہ آپ کے بزنس کا <span className="font-black underline decoration-yellow-400/50 underline-offset-8">پرافٹ</span> ضائع کر رہے ہیں۔
            </p>
         </div>
       </div>
       <style>{`
         @keyframes custom-blink {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.3; }
+          50% { opacity: 0.6; }
         }
         .animate-blink {
           animation: custom-blink 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;

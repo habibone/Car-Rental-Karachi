@@ -68,7 +68,7 @@ const SocialProof: React.FC = () => {
         {/* Main Heading */}
         <div className="text-center mb-24">
           <h2 className="text-4xl md:text-7xl font-black text-white font-urdu leading-[1.8] mb-10" dir="rtl">
-            کار رینٹل مالکان ہم پر <span className="text-accent italic">کیوں بھروسہ</span> کرتے ہیں؟
+            کار رینٹل مالکان ہم پر <span className="text-accent">کیوں بھروسہ</span> کرتے ہیں؟
           </h2>
           <div className="h-2 w-48 bg-primary mx-auto rounded-full"></div>
         </div>

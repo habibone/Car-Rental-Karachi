@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Smart Car Rental Website Solution</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gulzar&family=Noto+Sans+Arabic:wght@100..900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -20,7 +20,8 @@
               surface: '#1e293b', // Slate 800
             },
             fontFamily: {
-              urdu: ['"Noto Nastaliq Urdu"', 'serif'],
+              urdu: ['"Gulzar"', 'serif'],
+              'urdu-sans': ['"Noto Sans Arabic"', 'sans-serif'],
               english: ['"Poppins"', 'sans-serif'],
             }
           }
@@ -33,13 +34,20 @@
         line-height: 1.75;
       }
       .font-urdu {
-        font-family: 'Noto Nastaliq Urdu', serif;
-        line-height: 2.8;
+        font-family: 'Gulzar', serif;
+        line-height: 2.1;
+      }
+      .font-urdu-sans {
+        font-family: 'Noto Sans Arabic', sans-serif;
+        line-height: 1.6;
       }
       .glass-effect {
         background: rgba(15, 23, 42, 0.8);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      [dir="rtl"] {
+        text-align: right;
       }
     </style>
   <script type="importmap">

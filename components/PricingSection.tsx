@@ -11,12 +11,8 @@ const OfferSection: React.FC = () => {
     <div className="py-32 bg-secondary overflow-hidden relative border-t border-white/5">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-24">
-          <div className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-full font-english font-black text-sm mb-12 shadow-[0_10px_40px_rgba(99,102,241,0.4)] animate-pulse">
-            <Gift className="w-6 h-6" />
-            <span className="uppercase tracking-widest">Limited Time Launch Offer</span>
-          </div>
           <h2 className="text-4xl md:text-7xl font-black text-white font-urdu leading-[1.8]" dir="rtl">
-            کیا آپ کا بزنس ایک <span className="text-accent italic">خودکار مشین</span> بننے کے لیے تیار ہے؟
+            کیا آپ کا بزنس ایک <span className="text-accent">خودکار مشین</span> بننے کے لیے تیار ہے؟
           </h2>
           <div className="h-2 w-64 bg-accent mx-auto mt-12 rounded-full shadow-lg"></div>
         </div>
